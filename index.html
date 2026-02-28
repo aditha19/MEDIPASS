@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MediPass</title>
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@600&family=Orbitron:wght@700;900&family=DM+Sans&display=swap" rel="stylesheet">
+<style>
+:root{--c:#00ffe7;--v:#7b2fff;--r:#ff2d6e}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#020510;color:#cce8ff;font-family:'DM Sans',sans-serif;min-height:100vh;display:flex;justify-content:center;overflow-x:hidden}
+#bg{position:fixed;inset:0;z-index:0}
+.noise{position:fixed;inset:-50%;width:200%;height:200%;z-index:2;pointer-events:none;opacity:.028;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");animation:ns .5s steps(2) infinite}
+@keyframes ns{25%{transform:translate(-2%,1%)}50%{transform:translate(1%,-2%)}75%{transform:translate(-1%,2%)}}
+.scan{position:fixed;top:0;left:0;width:100%;height:3px;background:linear-gradient(90deg,transparent,rgba(0,255,231,.15),transparent);z-index:3;pointer-events:none;animation:sd 8s linear infinite}
+@keyframes sd{0%{top:-4px;opacity:.6}50%{opacity:.2}100%{top:100vh;opacity:0}}
+.wrap{position:relative;z-index:10;width:100%;max-width:560px;padding:40px 16px 64px}
+.hdr{text-align:center;margin-bottom:32px;animation:hi 1s cubic-bezier(.22,1,.36,1) both}
+@keyframes hi{from{opacity:0;transform:translateY(-24px)}to{opacity:1;transform:translateY(0)}}
+.logo-row{display:flex;align-items:center;justify-content:center;gap:14px;margin-bottom:8px}
+.emblem{width:56px;height:56px}
+.spin{animation:sp 12s linear infinite;transform-origin:28px 28px}
+@keyframes sp{to{transform:rotate(360deg)}}
+h1{font-family:'Orbitron',monospace;font-size:38px;font-weight:900;letter-spacing:.06em;background:linear-gradient(135deg,#fff,var(--c) 45%,var(--v));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;filter:drop-shadow(0 0 20px rgba(0,255,231,.25))}
+.tag{font-size:12px;letter-spacing:.22em;text-transform:uppercase;color:rgba(140,200,255,.38);font-family:'Rajdhani',sans-serif}
+.card{background:rgba(4,12,35,.78);backdrop-filter:blur(32px) saturate(160%);border-radius:28px;border:1px solid rgba(0,255,231,.18);padding:40px 36px;position:relative;overflow:hidden;box-shadow:0 0 0 1px rgba(0,255,231,.06),0 40px 80px rgba(0,0,0,.7),inset 0 1px 0 rgba(255,255,255,.06);animation:ci .9s .15s cubic-bezier(.22,1,.36,1) both}
+@keyframes ci{from{opacity:0;transform:translateY(40px) scale(.96)}to{opacity:1;transform:translateY(0) scale(1)}}
+.card::before{content:'';position:absolute;inset:0;border-radius:inherit;background:linear-gradient(135deg,rgba(0,255,231,.04) 0%,transparent 30%,rgba(123,47,255,.04) 60%,transparent 80%);pointer-events:none}
+.card::after{content:'';position:absolute;top:18px;left:18px;width:28px;height:28px;border-top:2px solid var(--c);border-left:2px solid var(--c);border-radius:4px 0 0 0;opacity:.6}
+.br{position:absolute;bottom:18px;right:18px;width:28px;height:28px;border-bottom:2px solid var(--c);border-right:2px solid var(--c);border-radius:0 0 4px 0;opacity:.6}
+.sec{display:flex;align-items:center;gap:10px;font-family:'Orbitron',monospace;font-size:9px;letter-spacing:.25em;color:var(--c);text-transform:uppercase;margin:24px 0 16px;opacity:.75}
+.sec::before{content:'';width:18px;height:1px;background:var(--c);opacity:.5}
+.sec::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,rgba(0,255,231,.25),transparent)}
+.sec:first-of-type{margin-top:0}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.s2{grid-column:1/-1}
+.stack{display:flex;flex-direction:column;gap:12px}
+.f label{display:block;font-family:'Rajdhani',sans-serif;font-size:10px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:rgba(0,255,231,.55);margin-bottom:7px;transition:color .2s}
+.f:focus-within label{color:var(--c)}
+.iw{position:relative}
+input,select,textarea{width:100%;background:rgba(0,20,60,.45);border:1px solid rgba(0,255,231,.14);border-radius:12px;padding:12px 14px;font-family:'DM Sans',sans-serif;font-size:14px;color:#e0f4ff;outline:none;transition:border-color .25s,background .25s,box-shadow .25s}
+textarea{height:76px;resize:none}
+input::placeholder,textarea::placeholder{color:rgba(140,200,255,.22)}
+select{cursor:pointer}
+select option{background:#050e28;color:#cce8ff}
+input:focus,select:focus,textarea:focus{border-color:rgba(0,255,231,.55);background:rgba(0,255,231,.04);box-shadow:0 0 0 3px rgba(0,255,231,.08)}
+.iw::after{content:'';position:absolute;bottom:0;left:50%;width:0;height:2px;background:linear-gradient(90deg,var(--v),var(--c));border-radius:0 0 12px 12px;transition:width .3s,left .3s;z-index:2}
+.f:focus-within .iw::after{width:100%;left:0}
+.bw{margin-top:28px;position:relative}
+.bglow{position:absolute;inset:-2px;border-radius:16px;background:linear-gradient(135deg,var(--c),var(--v),var(--r));filter:blur(8px);opacity:0;transition:opacity .3s}
+button{position:relative;z-index:1;width:100%;padding:17px 24px;background:linear-gradient(135deg,#003a5c,#010c28);border:1px solid rgba(0,255,231,.35);border-radius:14px;font-family:'Orbitron',monospace;font-size:13px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--c);cursor:pointer;transition:transform .2s,color .2s;display:flex;align-items:center;justify-content:center;gap:10px}
+button::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(0,255,231,.1),transparent,rgba(123,47,255,.1));opacity:0;transition:opacity .3s}
+.bw:hover .bglow{opacity:.55}
+.bw:hover button{transform:translateY(-2px);color:#fff}
+.bw:hover button::before{opacity:1}
+.bw:active button{transform:translateY(0)}
+.bi{animation:rot 4s linear infinite}
+@keyframes rot{to{transform:rotate(360deg)}}
+.ov{position:fixed;inset:0;z-index:1000;display:flex;flex-direction:column;align-items:center;justify-content:center;background:rgba(2,5,16,.92);backdrop-filter:blur(16px);opacity:0;pointer-events:none;transition:opacity .4s}
+.ov.on{opacity:1;pointer-events:all}
+.oi{font-size:72px;margin-bottom:20px;animation:pi .5s cubic-bezier(.22,1,.36,1)}
+@keyframes pi{from{transform:scale(.3) rotate(-20deg);opacity:0}to{transform:scale(1);opacity:1}}
+.ot{font-family:'Orbitron',monospace;font-size:22px;font-weight:900;color:var(--c);letter-spacing:.1em;margin-bottom:10px;text-shadow:0 0 30px var(--c)}
+.os{color:rgba(140,200,255,.38);font-size:14px;margin-bottom:32px}
+.oc{background:none;border:1px solid rgba(0,255,231,.18);color:var(--c);padding:10px 30px;border-radius:99px;font-family:'Orbitron',monospace;font-size:11px;letter-spacing:.15em;cursor:pointer;transition:background .2s;width:auto}
+.oc:hover{background:rgba(0,255,231,.1)}
+@keyframes shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-8px)}40%{transform:translateX(8px)}60%{transform:translateX(-5px)}80%{transform:translateX(5px)}}
+</style>
+</head>
+<body>
+<canvas id="bg"></canvas>
+<div class="noise"></div>
+<div class="scan"></div>
+
+<div class="ov" id="ov">
+  <div class="oi">✦</div>
+  <div class="ot">MediPass Generated</div>
+  <div class="os">Your Smart Medical Passport is ready</div>
+  <button class="oc" onclick="document.getElementById('ov').classList.remove('on')">Close</button>
+</div>
+
+<div class="wrap">
+  <div class="hdr">
+    <div class="logo-row">
+      <div class="emblem">
+        <svg viewBox="0 0 56 56" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <g class="spin"><circle cx="28" cy="28" r="26" stroke="url(#rg)" stroke-width="1.2" stroke-dasharray="4 3" opacity=".7"/></g>
+          <circle cx="28" cy="28" r="18" fill="url(#ig)" opacity=".15"/>
+          <circle cx="28" cy="28" r="18" stroke="url(#rg)" stroke-width="1" opacity=".5"/>
+          <rect x="23" y="16" width="10" height="24" rx="2.5" fill="url(#cg)"/>
+          <rect x="16" y="23" width="24" height="10" rx="2.5" fill="url(#cg)"/>
+          <circle cx="28" cy="28" r="3" fill="#00ffe7" opacity=".9"/>
+          <defs>
+            <linearGradient id="rg" x1="0" y1="0" x2="56" y2="56" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#00ffe7"/><stop offset="100%" stop-color="#7b2fff"/></linearGradient>
+            <linearGradient id="ig" x1="0" y1="0" x2="56" y2="56" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#00ffe7"/><stop offset="100%" stop-color="#0066ff"/></linearGradient>
+            <linearGradient id="cg" x1="16" y1="16" x2="40" y2="40" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#00ffe7"/><stop offset="100%" stop-color="#0066ff"/></linearGradient>
+          </defs>
+        </svg>
+      </div>
+      <h1>MEDIPASS</h1>
+    </div>
+    <p class="tag">Smart Medical Passport · v2.0</p>
+  </div>
+
+  <div class="card">
+    <div class="br"></div>
+    <div class="sec">Identity</div>
+    <div class="g2">
+      <div class="f s2"><label>Full Name</label><div class="iw"><input type="text" id="name" placeholder="e.g. Arjun Sharma" autocomplete="off"/></div></div>
+      <div class="f"><label>Age</label><div class="iw"><input type="number" id="age" placeholder="25"/></div></div>
+      <div class="f"><label>Blood Group</label><div class="iw"><select id="blood"><option value="">— Select —</option><option>A+</option><option>A-</option><option>B+</option><option>B-</option><option>O+</option><option>O-</option><option>AB+</option><option>AB-</option></select></div></div>
+    </div>
+    <div class="sec">Medical Profile</div>
+    <div class="stack">
+      <div class="f"><label>Allergies</label><div class="iw"><textarea id="allergies" placeholder="e.g. Penicillin, Peanuts, Latex"></textarea></div></div>
+      <div class="f"><label>Chronic Diseases</label><div class="iw"><textarea id="diseases" placeholder="e.g. Diabetes, Hypertension, Asthma"></textarea></div></div>
+      <div class="f"><label>Current Medications</label><div class="iw"><textarea id="meds" placeholder="e.g. Metformin 500mg"></textarea></div></div>
+    </div>
+    <div class="sec">Emergency Contact</div>
+    <div class="g2">
+      <div class="f"><label>Contact Name</label><div class="iw"><input type="text" id="ename" placeholder="Full Name"/></div></div>
+      <div class="f"><label>Phone</label><div class="iw"><input type="tel" id="ephone" placeholder="+91 98765 43210"/></div></div>
+    </div>
+    <div class="bw">
+      <div class="bglow"></div>
+      <button onclick="reg()"><span class="bi">⬡</span> Generate MediPass QR</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const cv=document.getElementById('bg'),c=cv.getContext('2d');
+let W,H;
+const resize=()=>{W=cv.width=innerWidth;H=cv.height=innerHeight};
+resize();addEventListener('resize',resize);
+
+const pts=Array.from({length:70},()=>({x:Math.random()*innerWidth,y:Math.random()*innerHeight,r:Math.random()*1.8+.4,vx:(Math.random()-.5)*.35,vy:(Math.random()-.5)*.35,a:Math.random()*.5+.1}));
+const cells=Array.from({length:8},()=>({x:Math.random()*innerWidth,y:Math.random()*innerHeight,r:20+Math.random()*30,vx:(Math.random()-.5)*.2,vy:(Math.random()-.5)*.2,p:Math.random()*Math.PI*2}));
+const pulses=[];let dT=0,pT=0;
+[0,1,2].forEach(()=>pulses.push({x:Math.random()*innerWidth,y:Math.random()*innerHeight,r:0,max:80+Math.random()*120,a:.25}));
+
+function dna(ox,amp,sh,t){
+  for(let s=0;s<24;s++){
+    const y1=s*sh,y2=(s+1)*sh,t1=s/24*Math.PI*8+t,t2=(s+1)/24*Math.PI*8+t;
+    const xa=ox+Math.cos(t1)*amp,xb=ox-Math.cos(t1)*amp,xa2=ox+Math.cos(t2)*amp,xb2=ox-Math.cos(t2)*amp,al=.12+.06*Math.sin(t1);
+    c.beginPath();c.moveTo(xa,y1);c.lineTo(xa2,y2);c.strokeStyle=`rgba(0,255,231,${al})`;c.lineWidth=1.2;c.stroke();
+    c.beginPath();c.moveTo(xb,y1);c.lineTo(xb2,y2);c.strokeStyle=`rgba(123,47,255,${al})`;c.lineWidth=1.2;c.stroke();
+    if(s%2===0){
+      const mx=xa+(xa2-xa)*.5,mx2=xb+(xb2-xb)*.5,my=y1+(y2-y1)*.5;
+      c.beginPath();c.moveTo(mx,my);c.lineTo(mx2,my);c.strokeStyle=`rgba(0,180,255,${al*.7})`;c.lineWidth=.8;c.stroke();
+      c.beginPath();c.arc(mx,my,2,0,Math.PI*2);c.fillStyle=`rgba(0,255,231,${al*1.8})`;c.fill();
+      c.beginPath();c.arc(mx2,my,2,0,Math.PI*2);c.fillStyle=`rgba(123,47,255,${al*1.8})`;c.fill();
+    }
+  }
+}
+
+function draw(){
+  c.clearRect(0,0,W,H);
+  const g=c.createRadialGradient(W*.3,H*.2,0,W*.5,H*.5,W*.9);
+  g.addColorStop(0,'rgba(0,30,80,.95)');g.addColorStop(.5,'rgba(2,8,30,.98)');g.addColorStop(1,'rgba(1,4,16,1)');
+  c.fillStyle=g;c.fillRect(0,0,W,H);
+
+  const sh=H/24;
+  dna(60,32,sh,dT);dna(W-60,32,sh,dT+2);dT+=.008;
+
+  if(++pT%140===0)pulses.push({x:Math.random()*W,y:Math.random()*H,r:0,max:80+Math.random()*120,a:.25});
+  for(let i=pulses.length-1;i>=0;i--){
+    const p=pulses[i];p.r+=.6;p.a*=.985;
+    c.beginPath();c.arc(p.x,p.y,p.r,0,Math.PI*2);c.strokeStyle=`rgba(0,255,231,${p.a*.4})`;c.lineWidth=1;c.stroke();
+    if(p.r>=p.max)pulses.splice(i,1);
+  }
+
+  for(const cl of cells){
+    cl.x+=cl.vx;cl.y+=cl.vy;cl.p+=.01;
+    if(cl.x<-60)cl.x=W+60;if(cl.x>W+60)cl.x=-60;if(cl.y<-60)cl.y=H+60;if(cl.y>H+60)cl.y=-60;
+    const al=.04+.02*Math.sin(cl.p);
+    c.beginPath();c.arc(cl.x,cl.y,cl.r,0,Math.PI*2);c.strokeStyle=`rgba(0,180,255,${al*2.5})`;c.lineWidth=1;c.stroke();
+    c.beginPath();c.arc(cl.x,cl.y,cl.r*.55,0,Math.PI*2);c.strokeStyle=`rgba(0,255,231,${al*1.5})`;c.lineWidth=.6;c.stroke();
+    c.beginPath();c.arc(cl.x,cl.y,cl.r*.18,0,Math.PI*2);c.fillStyle=`rgba(0,255,231,${al*3})`;c.fill();
+  }
+
+  for(const p of pts){p.x+=p.vx;p.y+=p.vy;if(p.x<0)p.x=W;if(p.x>W)p.x=0;if(p.y<0)p.y=H;if(p.y>H)p.y=0;}
+  for(let i=0;i<pts.length;i++){
+    for(let j=i+1;j<pts.length;j++){
+      const dx=pts[i].x-pts[j].x,dy=pts[i].y-pts[j].y,d=Math.hypot(dx,dy);
+      if(d<120){c.beginPath();c.moveTo(pts[i].x,pts[i].y);c.lineTo(pts[j].x,pts[j].y);c.strokeStyle=`rgba(0,180,255,${.08*(1-d/120)})`;c.lineWidth=.5;c.stroke();}
+    }
+    c.beginPath();c.arc(pts[i].x,pts[i].y,pts[i].r,0,Math.PI*2);c.fillStyle=`rgba(0,255,231,${pts[i].a*.6})`;c.fill();
+  }
+  requestAnimationFrame(draw);
+}
+draw();
+
+function reg(){
+  const name=document.getElementById('name').value.trim();
+  const age=document.getElementById('age').value.trim();
+  const blood=document.getElementById('blood').value;
+  const phone=document.getElementById('ephone').value.trim();
+  if(!name||!age||!blood||!phone){
+    const btn=document.querySelector('.bw button');
+    btn.style.animation='shake .4s ease';
+    setTimeout(()=>btn.style.animation='',500);
+    ['name','age','blood','ephone'].forEach(id=>{
+      const el=document.getElementById(id);
+      if(!el.value.trim()){el.style.borderColor='rgba(255,45,110,.7)';el.style.boxShadow='0 0 0 3px rgba(255,45,110,.1)';setTimeout(()=>{el.style.borderColor='';el.style.boxShadow='';},2000);}
+    });
+    return;
+  }
+  document.getElementById('ov').classList.add('on');
+}
+</script>
+</body>
+</html>
