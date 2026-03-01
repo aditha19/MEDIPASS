@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MediPass - Emergency Medical ID</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+        body {
+            background-color: #fff5f5;
+            padding: 20px;
+        }
+        .header {
+            background-color: #dc3545;
+            color: white;
+            padding: 20px;
+            border-radius: 15px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .header h1 {
+            font-size: 22px;
+            margin-bottom: 5px;
+        }
+        .header p {
+            font-size: 13px;
+            opacity: 0.9;
+        }
+        .card {
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-bottom: 15px;
+        }
+        .blood-group {
+            background: #dc3545;
+            color: white;
+            text-align: center;
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 15px;
+        }
+        .blood-group h2 {
+            font-size: 60px;
+            font-weight: bold;
+        }
+        .blood-group p {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+        .allergy-card {
+            background: #fff3cd;
+            border: 2px solid #ffc107;
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 15px;
+        }
+        .allergy-card h3 {
+            color: #856404;
+            margin-bottom: 8px;
+            font-size: 16px;
+        }
+        .allergy-card p {
+            color: #533f03;
+            font-size: 15px;
+            font-weight: bold;
+        }
+        .card h3 {
+            color: #333;
+            margin-bottom: 8px;
+            font-size: 15px;
+        }
+        .card p {
+            color: #555;
+            font-size: 14px;
+        }
+        .emergency-card {
+            background: #e8f4fd;
+            border: 2px solid #1a73e8;
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 15px;
+        }
+        .emergency-card h3 {
+            color: #1a73e8;
+            margin-bottom: 8px;
+            font-size: 16px;
+        }
+        .emergency-card a {
+            color: #1a73e8;
+            font-size: 18px;
+            font-weight: bold;
+            text-decoration: none;
+        }
+        .ai-card {
+            background: #f3e8ff;
+            border: 2px solid #7c3aed;
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 15px;
+        }
+        .ai-card h3 {
+            color: #7c3aed;
+            margin-bottom: 8px;
+            font-size: 16px;
+        }
+        .ai-card p {
+            color: #4c1d95;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+        .loading {
+            color: #999;
+            font-style: italic;
+        }
+        .patient-name {
+            text-align: center;
+            font-size: 24px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 5px;
+        }
+        .patient-age {
+            text-align: center;
+            color: #666;
+            margin-bottom: 15px;
+        }
+        .whatsapp-btn {
+            display: block;
+            background: #25D366;
+            color: white;
+            text-align: center;
+            padding: 15px;
+            border-radius: 10px;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 16px;
+            margin-bottom: 15px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <h1>🚨 EMERGENCY MEDICAL ID</h1>
+        <p>MediPass — Verified Medical Passport</p>
+    </div>
+
+    <div id="whatsappContainer"></div>
+
+    <div id="patientInfo">
+        <p style="text-align:center; color:#999;">Loading patient data...</p>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getFirestore, doc, getDoc, updateDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyDQzrcG7R06X-pU9TwZX37Yeb76zVBIM4U",
+            authDomain: "medipass-e4f7d.firebaseapp.com",
+            projectId: "medipass-e4f7d",
+            storageBucket: "medipass-e4f7d.firebasestorage.app",
+            messagingSenderId: "911340948509",
+            appId: "1:911340948509:web:e8d0ca16801a34fddb4af4"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        const urlParams = new URLSearchParams(window.location.search);
+        const patientId = urlParams.get('id');
+
+        if (patientId) {
+            const docRef = doc(db, "patients", patientId);
+            const docSnap = await getDoc(docRef);
+
+            if (docSnap.exists()) {
+                const p = docSnap.data();
+
+                // Show WhatsApp button first
+                const message = `🚨 EMERGENCY ALERT: ${p.name}'s MediPass was scanned by a doctor. Please contact them immediately or call 108. Time: ${new Date().toLocaleTimeString()}`;
+                const whatsappUrl = `https://api.whatsapp.com/send?phone=91${p.emergencyPhone}&text=${encodeURIComponent(message)}`;
+                document.getElementById('whatsappContainer').innerHTML = `
+                    <a href="${whatsappUrl}" target="_blank" class="whatsapp-btn">
+                        📱 Send Emergency WhatsApp Alert to Family
+                    </a>
+                `;
+
+                // Show patient info
+                document.getElementById('patientInfo').innerHTML = `
+                    <p class="patient-name">${p.name}</p>
+                    <p class="patient-age">Age: ${p.age}</p>
+
+                    <div class="blood-group">
+                        <h2>${p.bloodGroup}</h2>
+                        <p>Blood Group</p>
+                    </div>
+
+                    <div class="allergy-card">
+                        <h3>⚠️ ALLERGIES</h3>
+                        <p>${p.allergies || 'None reported'}</p>
+                    </div>
+
+                    <div class="card">
+                        <h3>💊 Current Medications</h3>
+                        <p>${p.medications || 'None'}</p>
+                    </div>
+
+                    <div class="card">
+                        <h3>🏥 Chronic Conditions</h3>
+                        <p>${p.diseases || 'None'}</p>
+                    </div>
+
+                    <div class="ai-card">
+                        <h3>🤖 AI Emergency Brief</h3>
+                        <p id="aiSummary" class="loading">Generating AI summary...</p>
+                    </div>
+
+                    <div class="emergency-card">
+                        <h3>📞 Emergency Contact</h3>
+                        <p style="font-weight:bold; margin-bottom:5px;">${p.emergencyName}</p>
+                        <a href="tel:${p.emergencyPhone}">📱 ${p.emergencyPhone}</a>
+                    </div>
+                `;
+
+                await updateDoc(docRef, { scanned: true, scannedAt: new Date() });
+
+            } else {
+                document.getElementById('patientInfo').innerHTML = '<p style="text-align:center; color:red;">Patient not found.</p>';
+            }
+        }
+    </script>
+</body>
+</html>
