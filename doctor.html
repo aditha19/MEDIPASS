@@ -11,7 +11,7 @@
         .header h1 { font-size: 20px; margin-bottom: 4px; letter-spacing: .05em; }
         .header p { font-size: 12px; opacity: 0.85; }
         .identity-card { background: #111; border: 1px solid #333; border-radius: 16px; padding: 20px; margin-bottom: 14px; display: flex; align-items: center; gap: 16px; }
-        .patient-photo { width: 80px; height: 80px; border-radius: 50%; border: 3px solid #00ffe7; object-fit: cover; flex-shrink: 0; background: #222; display: flex; align-items: center; justify-content: center; font-size: 32px; overflow: hidden; }
+        .patient-photo { width: 80px; height: 80px; border-radius: 50%; border: 3px solid #00ffe7; flex-shrink: 0; background: #222; display: flex; align-items: center; justify-content: center; font-size: 32px; overflow: hidden; }
         .patient-photo img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; }
         .patient-info { flex: 1; }
         .patient-name { font-size: 22px; font-weight: bold; color: #fff; margin-bottom: 4px; }
@@ -34,35 +34,60 @@
         .contact-label { font-size: 11px; color: #666; margin-top: 2px; }
         .call-btn { background: #1a73e8; color: white; padding: 10px 16px; border-radius: 10px; text-decoration: none; font-weight: bold; font-size: 13px; white-space: nowrap; }
         .whatsapp-section { margin-bottom: 14px; display: flex; flex-direction: column; gap: 10px; }
-        .wa-btn-both { display: flex; align-items: center; justify-content: center; gap: 10px; background: linear-gradient(135deg, #1a8f4a, #0f7066); color: white; padding: 18px 16px; border-radius: 14px; font-weight: bold; font-size: 15px; cursor: pointer; border: none; width: 100%; box-shadow: 0 4px 24px rgba(37,211,102,.3); transition: opacity .2s, transform .15s; }
-        .wa-btn-both:hover { opacity: .9; transform: translateY(-1px); }
-        .wa-btn-both:active { transform: translateY(0); }
+        .wa-btn-both { display: flex; align-items: center; justify-content: center; gap: 10px; background: linear-gradient(135deg, #1a8f4a, #0f7066); color: white; padding: 18px 16px; border-radius: 14px; font-weight: bold; font-size: 15px; cursor: pointer; border: none; width: 100%; box-shadow: 0 4px 24px rgba(37,211,102,.3); }
         .wa-row { display: flex; gap: 10px; }
-        .wa-btn-single { flex: 1; display: flex; align-items: center; justify-content: center; gap: 8px; color: white; padding: 14px 10px; border-radius: 12px; font-weight: bold; font-size: 13px; cursor: pointer; border: none; transition: opacity .2s, transform .15s; }
-        .wa-btn-single:hover { opacity: .9; transform: translateY(-1px); }
-        .wa-btn-single:active { transform: translateY(0); }
+        .wa-btn-single { flex: 1; display: flex; align-items: center; justify-content: center; gap: 8px; color: white; padding: 14px 10px; border-radius: 12px; font-weight: bold; font-size: 13px; cursor: pointer; border: none; }
         .wa-btn-1 { background: #25D366; }
         .wa-btn-2 { background: #128C7E; }
-        .loc-status { border-radius: 10px; padding: 10px 14px; font-size: 12px; display: flex; align-items: center; gap: 8px; }
+        .loc-status { border-radius: 10px; padding: 10px 14px; font-size: 12px; display: flex; align-items: center; gap: 8px; margin-bottom: 4px; }
         .loc-fetching { background: #111; border: 1px solid #333; color: #aaa; }
         .loc-ok { background: #0d1f0d; border: 1px solid #1a4d1a; color: #6fcf6f; }
         .loc-err { background: #1a0d0d; border: 1px solid #4d1a1a; color: #ff7a7a; }
         .ai-card { background: #120a28; border: 2px solid #7c3aed; padding: 20px; border-radius: 16px; margin-bottom: 14px; }
         .ai-card h3 { color: #a78bff; margin-bottom: 10px; font-size: 14px; text-transform: uppercase; letter-spacing: .1em; }
         .ai-card p { color: #d4bbff; font-size: 14px; line-height: 1.7; }
+        .risk-badge { display: inline-block; padding: 6px 14px; border-radius: 20px; font-weight: bold; font-size: 13px; margin-bottom: 10px; }
+        .risk-critical { background: #dc3545; color: white; }
+        .risk-high { background: #fd7e14; color: white; }
+        .risk-medium { background: #ffc107; color: black; }
+        .risk-low { background: #28a745; color: white; }
+        .voice-btn { display: block; background: #7c3aed; color: white; text-align: center; padding: 12px; border-radius: 10px; border: none; font-weight: bold; font-size: 14px; margin-top: 12px; width: 100%; cursor: pointer; }
+        .voice-btn:disabled { background: #444; cursor: not-allowed; }
         .loading { color: #666; font-style: italic; }
         .pulse { animation: pulse 1.5s infinite; }
         @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.4} }
+        .mode-badge { text-align: center; padding: 10px; border-radius: 10px; font-weight: bold; margin-bottom: 14px; font-size: 14px; }
+        .mode-emergency { background: #dc3545; color: white; }
+        .mode-normal { background: #1a73e8; color: white; }
+        .emergency-popup { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.92); display: flex; justify-content: center; align-items: center; z-index: 9999; }
+        .popup-box { background: #111; border: 2px solid #dc3545; padding: 30px; border-radius: 20px; text-align: center; max-width: 320px; width: 90%; }
+        .popup-box h2 { color: #dc3545; font-size: 22px; margin-bottom: 10px; }
+        .popup-box p { color: #aaa; margin-bottom: 20px; font-size: 14px; line-height: 1.5; }
+        .btn-emergency { display: block; background: #dc3545; color: white; padding: 15px; border-radius: 10px; border: none; font-size: 16px; font-weight: bold; width: 100%; margin-bottom: 10px; cursor: pointer; }
+        .btn-normal { display: block; background: #1a73e8; color: white; padding: 15px; border-radius: 10px; border: none; font-size: 16px; font-weight: bold; width: 100%; cursor: pointer; }
     </style>
 </head>
 <body>
+
+    <div class="emergency-popup" id="emergencyPopup">
+        <div class="popup-box">
+            <h2>🚨 Is This an Emergency?</h2>
+            <p>Select the type of scan. Emergency mode will activate voice reader, request location, and enable WhatsApp alerts.</p>
+            <button class="btn-emergency" onclick="setMode('emergency')">🚨 YES — This is an Emergency</button>
+            <button class="btn-normal" onclick="setMode('normal')">📋 No — Routine Checkup</button>
+        </div>
+    </div>
+
     <div class="header">
         <h1>🚨 EMERGENCY MEDICAL ID</h1>
         <p>MediPass — Smart Medical Passport</p>
     </div>
 
+    <div id="modeBadge"></div>
     <div id="whatsappContainer"></div>
-    <div id="patientInfo"><p style="text-align:center;color:#666;padding:40px;">Loading patient data...</p></div>
+    <div id="patientInfo">
+        <p style="text-align:center;color:#666;padding:40px;">Loading patient data...</p>
+    </div>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
@@ -77,6 +102,8 @@
             appId: "1:911340948509:web:e8d0ca16801a34fddb4af4"
         };
 
+        const GEMINI_API_KEY = "AIzaSyCYDhdgNtophIKsM-2F78HWNxiqZH1Pedo";
+
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
@@ -84,6 +111,21 @@
         const patientId = urlParams.get('id');
 
         let locationData = null;
+        let patientData = null;
+        let aiTextGlobal = '';
+
+        // Load patient data immediately
+        if (patientId) {
+            const docRef = doc(db, "patients", patientId);
+            const docSnap = await getDoc(docRef);
+            if (docSnap.exists()) {
+                patientData = docSnap.data();
+                await updateDoc(docRef, { scanned: true, scannedAt: new Date() });
+            } else {
+                document.getElementById('patientInfo').innerHTML = '<p style="text-align:center;color:red;padding:40px;">Patient not found.</p>';
+                document.getElementById('emergencyPopup').style.display = 'none';
+            }
+        }
 
         function getLocation() {
             return new Promise((resolve) => {
@@ -95,7 +137,7 @@
                         resolve({ lat, lng, mapsUrl: `https://maps.google.com/?q=${lat},${lng}` });
                     },
                     () => resolve(null),
-                    { timeout: 8000 }
+                    { timeout: 8000, enableHighAccuracy: true }
                 );
             });
         }
@@ -108,7 +150,7 @@
             return (
                 `🚨 *EMERGENCY ALERT — MediPass*\n\n` +
                 `Hi ${contactName},\n` +
-                `*${p.name}*'s MediPass QR was just scanned by a doctor.\n\n` +
+                `*${p.name}*'s MediPass QR was just scanned.\n\n` +
                 `🩸 *Blood Group:* ${p.bloodGroup}\n` +
                 `⚠️ *Allergies:* ${p.allergies || 'None'}\n` +
                 `💊 *Medications:* ${p.medications || 'None'}\n` +
@@ -123,41 +165,46 @@
             window.open(`https://api.whatsapp.com/send?phone=91${phone}&text=${encodeURIComponent(msg)}`, '_blank');
         }
 
-        if (patientId) {
-            const docRef = doc(db, "patients", patientId);
-            const docSnap = await getDoc(docRef);
+        window.setMode = async function(mode) {
+            document.getElementById('emergencyPopup').style.display = 'none';
+            const p = patientData;
+            if (!p) return;
 
-            if (docSnap.exists()) {
-                const p = docSnap.data();
-                const has2 = !!(p.emergencyName2 && p.emergencyPhone2);
+            const has2 = !!(p.emergencyName2 && p.emergencyPhone2);
 
-                const locPromise = getLocation();
+            // Mode badge
+            document.getElementById('modeBadge').innerHTML = mode === 'emergency'
+                ? '<div class="mode-badge mode-emergency">🚨 EMERGENCY MODE ACTIVE</div>'
+                : '<div class="mode-badge mode-normal">📋 ROUTINE CHECKUP MODE</div>';
 
+            // Emergency mode — get location and show WhatsApp
+            if (mode === 'emergency') {
                 const name1Short = p.emergencyName.split(' ')[0];
                 const name2Short = has2 ? p.emergencyName2.split(' ')[0] : '';
 
                 document.getElementById('whatsappContainer').innerHTML = `
                     <div class="whatsapp-section">
-                        <div id="locStatus" class="loc-status loc-fetching">⏳ Fetching your location to include in alert...</div>
+                        <div id="locStatus" class="loc-status loc-fetching">⏳ Requesting location access...</div>
                         <button class="wa-btn-both" onclick="sendWA('both')">
-                            📲 Send Alert to ${has2 ? 'BOTH Contacts' : name1Short} with 📍 Location
+                            📲 Send Emergency Alert to ${has2 ? 'BOTH Contacts' : name1Short} 📍
                         </button>
                         ${has2 ? `
                         <div class="wa-row">
-                            <button class="wa-btn-single wa-btn-1" onclick="sendWA(1)">📱 Alert ${name1Short} only</button>
-                            <button class="wa-btn-single wa-btn-2" onclick="sendWA(2)">📱 Alert ${name2Short} only</button>
+                            <button class="wa-btn-single wa-btn-1" onclick="sendWA(1)">📱 Alert ${name1Short}</button>
+                            <button class="wa-btn-single wa-btn-2" onclick="sendWA(2)">📱 Alert ${name2Short}</button>
                         </div>` : ''}
                     </div>
                 `;
 
-                locationData = await locPromise;
+                // Request location — browser will show permission popup automatically
+                locationData = await getLocation();
                 const locEl = document.getElementById('locStatus');
                 if (locationData) {
                     locEl.className = 'loc-status loc-ok';
-                    locEl.innerHTML = `✅ Location ready — will be included in the WhatsApp alert`;
+                    locEl.innerHTML = `✅ Location captured — will be included in alert`;
                 } else {
                     locEl.className = 'loc-status loc-err';
-                    locEl.innerHTML = `⚠️ Location unavailable — alert will still be sent without it`;
+                    locEl.innerHTML = `⚠️ Location denied — alert will be sent without location`;
                 }
 
                 window.sendWA = function(target) {
@@ -165,80 +212,146 @@
                         openWA(p.emergencyPhone, buildMessage(p, p.emergencyName));
                     }
                     if ((target === 2 || target === 'both') && has2) {
-                        setTimeout(() => openWA(p.emergencyPhone2, buildMessage(p, p.emergencyName2)), target === 'both' ? 900 : 0);
+                        setTimeout(() => openWA(p.emergencyPhone2, buildMessage(p, p.emergencyName2)), 900);
                     }
                 };
+            }
 
-                const photoHtml = p.photo
-                    ? `<div class="patient-photo"><img src="${p.photo}" alt="${p.name}"/></div>`
-                    : `<div class="patient-photo">👤</div>`;
+            // Show patient info
+            const photoHtml = p.photo
+                ? `<div class="patient-photo"><img src="${p.photo}" alt="${p.name}"/></div>`
+                : `<div class="patient-photo">👤</div>`;
 
-                const contact2Html = has2 ? `
+            const contact2Html = has2 ? `
+                <div class="contact-row">
+                    <div>
+                        <div class="contact-name">${p.emergencyName2}</div>
+                        <div class="contact-label">Emergency Contact 2</div>
+                    </div>
+                    <a href="tel:${p.emergencyPhone2}" class="call-btn">📞 Call</a>
+                </div>` : '';
+
+            document.getElementById('patientInfo').innerHTML = `
+                <div class="identity-card">
+                    ${photoHtml}
+                    <div class="patient-info">
+                        <div class="patient-name">${p.name}</div>
+                        <div class="patient-age">Age: ${p.age}</div>
+                        <div class="verify-badge">✓ Verify face matches photo</div>
+                    </div>
+                </div>
+
+                <div class="blood-group">
+                    <h2>${p.bloodGroup}</h2>
+                    <p>Blood Group</p>
+                </div>
+
+                <div class="allergy-card">
+                    <h3>⚠️ ALLERGIES — DO NOT ADMINISTER</h3>
+                    <p>${p.allergies || 'None reported'}</p>
+                </div>
+
+                <div class="ai-card">
+                    <h3>🤖 AI Emergency Brief</h3>
+                    <div id="riskBadge"></div>
+                    <p id="aiSummary" class="loading pulse">⏳ Generating clinical summary...</p>
+                    ${mode === 'emergency' ? '<button class="voice-btn" id="voiceBtn" onclick="speakSummary()" disabled>🔊 Read Aloud (Loading...)</button>' : ''}
+                </div>
+
+                <div class="card">
+                    <h3>💊 Current Medications</h3>
+                    <p>${p.medications || 'None reported'}</p>
+                </div>
+
+                <div class="card">
+                    <h3>🏥 Chronic Conditions</h3>
+                    <p>${p.diseases || 'None reported'}</p>
+                </div>
+
+                <div class="emergency-card">
+                    <h3>📞 Emergency Contacts</h3>
                     <div class="contact-row">
                         <div>
-                            <div class="contact-name">${p.emergencyName2}</div>
-                            <div class="contact-label">Emergency Contact 2</div>
+                            <div class="contact-name">${p.emergencyName}</div>
+                            <div class="contact-label">Primary Contact</div>
                         </div>
-                        <a href="tel:${p.emergencyPhone2}" class="call-btn">📞 Call</a>
+                        <a href="tel:${p.emergencyPhone}" class="call-btn">📞 Call</a>
                     </div>
-                ` : '';
+                    ${contact2Html}
+                </div>
+                <p style="text-align:center;color:#333;font-size:11px;margin-top:16px;">Patient ID: ${patientId}</p>
+            `;
 
-                document.getElementById('patientInfo').innerHTML = `
-                    <div class="identity-card">
-                        ${photoHtml}
-                        <div class="patient-info">
-                            <div class="patient-name">${p.name}</div>
-                            <div class="patient-age">Age: ${p.age}</div>
-                            <div class="verify-badge">✓ Verify face matches photo</div>
-                        </div>
-                    </div>
+            await generateAI(p, mode);
+        }
 
-                    <div class="blood-group">
-                        <h2>${p.bloodGroup}</h2>
-                        <p>Blood Group</p>
-                    </div>
+        async function generateAI(p, mode) {
+            try {
+                const prompt = `You are an emergency medical AI. Patient:
+- Name: ${p.name}, Age: ${p.age}, Blood Group: ${p.bloodGroup}
+- Allergies: ${p.allergies || 'None'}
+- Chronic Diseases: ${p.diseases || 'None'}
+- Current Medications: ${p.medications || 'None'}
 
-                    <div class="allergy-card">
-                        <h3>⚠️ ALLERGIES — DO NOT ADMINISTER</h3>
-                        <p>${p.allergies || 'None reported'}</p>
-                    </div>
+Give a SHORT emergency brief:
+1. RISK LEVEL: Critical, High, Medium, or Low
+2. DO NOT GIVE: What medications or treatments to avoid
+3. FIRST ACTION: What to check immediately
+4. WARNING: Dangerous drug interactions if any
 
-                    <div class="ai-card">
-                        <h3>🤖 AI Emergency Brief</h3>
-                        <p id="aiSummary" class="loading pulse">Generating clinical summary...</p>
-                    </div>
+Be very direct. Doctor reads this in 10 seconds.`;
 
-                    <div class="card">
-                        <h3>💊 Current Medications</h3>
-                        <p>${p.medications || 'None reported'}</p>
-                    </div>
+                const response = await fetch(
+                    `https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${GEMINI_API_KEY}`,
+                    {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            contents: [{ parts: [{ text: prompt }] }]
+                        })
+                    }
+                );
 
-                    <div class="card">
-                        <h3>🏥 Chronic Conditions</h3>
-                        <p>${p.diseases || 'None reported'}</p>
-                    </div>
+                const data = await response.json();
+                const aiText = data.candidates[0].content.parts[0].text;
+                aiTextGlobal = aiText;
 
-                    <div class="emergency-card">
-                        <h3>📞 Emergency Contacts</h3>
-                        <div class="contact-row">
-                            <div>
-                                <div class="contact-name">${p.emergencyName}</div>
-                                <div class="contact-label">Emergency Contact 1 (Primary)</div>
-                            </div>
-                            <a href="tel:${p.emergencyPhone}" class="call-btn">📞 Call</a>
-                        </div>
-                        ${contact2Html}
-                    </div>
+                let riskLevel = 'MEDIUM';
+                let riskClass = 'risk-medium';
+                if (aiText.toLowerCase().includes('critical')) { riskLevel = 'CRITICAL'; riskClass = 'risk-critical'; }
+                else if (aiText.toLowerCase().includes('high')) { riskLevel = 'HIGH'; riskClass = 'risk-high'; }
+                else if (aiText.toLowerCase().includes('low')) { riskLevel = 'LOW'; riskClass = 'risk-low'; }
 
-                    <p style="text-align:center;color:#333;font-size:11px;margin-top:16px;">Patient ID: ${patientId}</p>
-                `;
+                document.getElementById('riskBadge').innerHTML = `<span class="risk-badge ${riskClass}">⚠️ Risk: ${riskLevel}</span>`;
+                document.getElementById('aiSummary').innerText = aiText;
+                document.getElementById('aiSummary').classList.remove('loading', 'pulse');
 
-                await updateDoc(docRef, { scanned: true, scannedAt: new Date() });
+                if (mode === 'emergency') {
+                    const voiceBtn = document.getElementById('voiceBtn');
+                    if (voiceBtn) {
+                        voiceBtn.disabled = false;
+                        voiceBtn.innerText = '🔊 Read Aloud';
+                        speakSummary();
+                    }
+                }
 
-            } else {
-                document.getElementById('patientInfo').innerHTML = '<p style="text-align:center;color:red;padding:40px;">Patient not found.</p>';
+            } catch (error) {
+                document.getElementById('aiSummary').innerText = 'AI summary unavailable. Check patient details manually.';
+                document.getElementById('aiSummary').classList.remove('pulse');
             }
         }
+
+        window.speakSummary = function() {
+            const p = patientData;
+            const text = `Emergency patient ${p.name}. Age ${p.age}. Blood group ${p.bloodGroup}. ${p.allergies ? 'Known allergies: ' + p.allergies + '. ' : 'No known allergies. '} ${aiTextGlobal}`;
+            window.speechSynthesis.cancel();
+            const speech = new SpeechSynthesisUtterance(text);
+            speech.lang = 'en-IN';
+            speech.rate = 0.85;
+            speech.pitch = 1;
+            window.speechSynthesis.speak(speech);
+        }
+
     </script>
 </body>
 </html>
