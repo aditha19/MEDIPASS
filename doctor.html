@@ -1,16 +1,15 @@
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MediPass - Emergency Medical ID</title>
+    <title>MediPass - Doctor Emergency View</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: Arial, sans-serif; }
         body { background-color: #0a0a0a; padding: 16px; color: #fff; }
         .header { background: linear-gradient(135deg, #dc3545, #8b0000); color: white; padding: 20px; border-radius: 16px; text-align: center; margin-bottom: 16px; border: 1px solid rgba(255,100,100,.3); }
         .header h1 { font-size: 20px; margin-bottom: 4px; letter-spacing: .05em; }
         .header p { font-size: 12px; opacity: 0.85; }
-        /* Patient Identity Card */
         .identity-card { background: #111; border: 1px solid #333; border-radius: 16px; padding: 20px; margin-bottom: 14px; display: flex; align-items: center; gap: 16px; }
         .patient-photo { width: 80px; height: 80px; border-radius: 50%; border: 3px solid #00ffe7; object-fit: cover; flex-shrink: 0; background: #222; display: flex; align-items: center; justify-content: center; font-size: 32px; overflow: hidden; }
         .patient-photo img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; }
@@ -18,19 +17,15 @@
         .patient-name { font-size: 22px; font-weight: bold; color: #fff; margin-bottom: 4px; }
         .patient-age { color: #aaa; font-size: 14px; margin-bottom: 8px; }
         .verify-badge { display: inline-block; background: rgba(0,255,100,.1); border: 1px solid rgba(0,255,100,.3); border-radius: 99px; padding: 4px 12px; font-size: 11px; color: #00ff64; }
-        /* Blood Group */
         .blood-group { background: linear-gradient(135deg, #dc3545, #8b0000); color: white; text-align: center; padding: 20px; border-radius: 16px; margin-bottom: 14px; }
         .blood-group h2 { font-size: 56px; font-weight: bold; line-height: 1; }
         .blood-group p { font-size: 13px; opacity: 0.9; margin-top: 4px; }
-        /* Allergy */
         .allergy-card { background: #1a1500; border: 2px solid #ffc107; padding: 20px; border-radius: 16px; margin-bottom: 14px; }
         .allergy-card h3 { color: #ffc107; margin-bottom: 8px; font-size: 15px; }
         .allergy-card p { color: #ffe066; font-size: 15px; font-weight: bold; }
-        /* Info Card */
         .card { background: #111; border: 1px solid #333; padding: 18px; border-radius: 16px; margin-bottom: 14px; }
         .card h3 { color: #aaa; margin-bottom: 8px; font-size: 13px; text-transform: uppercase; letter-spacing: .1em; }
         .card p { color: #eee; font-size: 15px; line-height: 1.5; }
-        /* Emergency Contact */
         .emergency-card { background: #0a1628; border: 2px solid #1a73e8; padding: 18px; border-radius: 16px; margin-bottom: 14px; }
         .emergency-card h3 { color: #1a73e8; margin-bottom: 10px; font-size: 14px; text-transform: uppercase; letter-spacing: .1em; }
         .contact-row { display: flex; align-items: center; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,.06); }
@@ -38,9 +33,20 @@
         .contact-name { font-weight: bold; color: #fff; font-size: 15px; }
         .contact-label { font-size: 11px; color: #666; margin-top: 2px; }
         .call-btn { background: #1a73e8; color: white; padding: 10px 16px; border-radius: 10px; text-decoration: none; font-weight: bold; font-size: 13px; white-space: nowrap; }
-        /* WhatsApp */
-        .whatsapp-btn { display: block; background: #25D366; color: white; text-align: center; padding: 16px; border-radius: 14px; text-decoration: none; font-weight: bold; font-size: 15px; margin-bottom: 14px; }
-        /* AI Card */
+        .whatsapp-section { margin-bottom: 14px; display: flex; flex-direction: column; gap: 10px; }
+        .wa-btn-both { display: flex; align-items: center; justify-content: center; gap: 10px; background: linear-gradient(135deg, #1a8f4a, #0f7066); color: white; padding: 18px 16px; border-radius: 14px; font-weight: bold; font-size: 15px; cursor: pointer; border: none; width: 100%; box-shadow: 0 4px 24px rgba(37,211,102,.3); transition: opacity .2s, transform .15s; }
+        .wa-btn-both:hover { opacity: .9; transform: translateY(-1px); }
+        .wa-btn-both:active { transform: translateY(0); }
+        .wa-row { display: flex; gap: 10px; }
+        .wa-btn-single { flex: 1; display: flex; align-items: center; justify-content: center; gap: 8px; color: white; padding: 14px 10px; border-radius: 12px; font-weight: bold; font-size: 13px; cursor: pointer; border: none; transition: opacity .2s, transform .15s; }
+        .wa-btn-single:hover { opacity: .9; transform: translateY(-1px); }
+        .wa-btn-single:active { transform: translateY(0); }
+        .wa-btn-1 { background: #25D366; }
+        .wa-btn-2 { background: #128C7E; }
+        .loc-status { border-radius: 10px; padding: 10px 14px; font-size: 12px; display: flex; align-items: center; gap: 8px; }
+        .loc-fetching { background: #111; border: 1px solid #333; color: #aaa; }
+        .loc-ok { background: #0d1f0d; border: 1px solid #1a4d1a; color: #6fcf6f; }
+        .loc-err { background: #1a0d0d; border: 1px solid #4d1a1a; color: #ff7a7a; }
         .ai-card { background: #120a28; border: 2px solid #7c3aed; padding: 20px; border-radius: 16px; margin-bottom: 14px; }
         .ai-card h3 { color: #a78bff; margin-bottom: 10px; font-size: 14px; text-transform: uppercase; letter-spacing: .1em; }
         .ai-card p { color: #d4bbff; font-size: 14px; line-height: 1.7; }
@@ -77,31 +83,97 @@
         const urlParams = new URLSearchParams(window.location.search);
         const patientId = urlParams.get('id');
 
+        let locationData = null;
+
+        function getLocation() {
+            return new Promise((resolve) => {
+                if (!navigator.geolocation) { resolve(null); return; }
+                navigator.geolocation.getCurrentPosition(
+                    (pos) => {
+                        const lat = pos.coords.latitude.toFixed(6);
+                        const lng = pos.coords.longitude.toFixed(6);
+                        resolve({ lat, lng, mapsUrl: `https://maps.google.com/?q=${lat},${lng}` });
+                    },
+                    () => resolve(null),
+                    { timeout: 8000 }
+                );
+            });
+        }
+
+        function buildMessage(p, contactName) {
+            const time = new Date().toLocaleTimeString('en-IN');
+            const locLine = locationData
+                ? `\n📍 *Location:* ${locationData.mapsUrl}`
+                : `\n📍 Location: Could not be fetched`;
+            return (
+                `🚨 *EMERGENCY ALERT — MediPass*\n\n` +
+                `Hi ${contactName},\n` +
+                `*${p.name}*'s MediPass QR was just scanned by a doctor.\n\n` +
+                `🩸 *Blood Group:* ${p.bloodGroup}\n` +
+                `⚠️ *Allergies:* ${p.allergies || 'None'}\n` +
+                `💊 *Medications:* ${p.medications || 'None'}\n` +
+                `🏥 *Conditions:* ${p.diseases || 'None'}\n` +
+                `⏰ *Time:* ${time}` +
+                locLine +
+                `\n\nPlease reach the patient immediately or call *108* for ambulance!`
+            );
+        }
+
+        function openWA(phone, msg) {
+            window.open(`https://api.whatsapp.com/send?phone=91${phone}&text=${encodeURIComponent(msg)}`, '_blank');
+        }
+
         if (patientId) {
             const docRef = doc(db, "patients", patientId);
             const docSnap = await getDoc(docRef);
 
             if (docSnap.exists()) {
                 const p = docSnap.data();
+                const has2 = !!(p.emergencyName2 && p.emergencyPhone2);
 
-                // WhatsApp button with location
-                const scannedTime = new Date().toLocaleTimeString('en-IN');
-                const message = `🚨 EMERGENCY ALERT!\n\n${p.name}'s MediPass QR was just scanned by a doctor.\n\n🩸 Blood Group: ${p.bloodGroup}\n⚠️ Allergies: ${p.allergies || 'None'}\n\n⏰ Time: ${scannedTime}\n\nPlease contact them immediately or call 108!`;
-                const whatsappUrl = `https://api.whatsapp.com/send?phone=91${p.emergencyPhone}&text=${encodeURIComponent(message)}`;
+                const locPromise = getLocation();
+
+                const name1Short = p.emergencyName.split(' ')[0];
+                const name2Short = has2 ? p.emergencyName2.split(' ')[0] : '';
 
                 document.getElementById('whatsappContainer').innerHTML = `
-                    <a href="${whatsappUrl}" target="_blank" class="whatsapp-btn">
-                        📱 Send Emergency WhatsApp Alert to Family
-                    </a>
+                    <div class="whatsapp-section">
+                        <div id="locStatus" class="loc-status loc-fetching">⏳ Fetching your location to include in alert...</div>
+                        <button class="wa-btn-both" onclick="sendWA('both')">
+                            📲 Send Alert to ${has2 ? 'BOTH Contacts' : name1Short} with 📍 Location
+                        </button>
+                        ${has2 ? `
+                        <div class="wa-row">
+                            <button class="wa-btn-single wa-btn-1" onclick="sendWA(1)">📱 Alert ${name1Short} only</button>
+                            <button class="wa-btn-single wa-btn-2" onclick="sendWA(2)">📱 Alert ${name2Short} only</button>
+                        </div>` : ''}
+                    </div>
                 `;
 
-                // Photo display
+                locationData = await locPromise;
+                const locEl = document.getElementById('locStatus');
+                if (locationData) {
+                    locEl.className = 'loc-status loc-ok';
+                    locEl.innerHTML = `✅ Location ready — will be included in the WhatsApp alert`;
+                } else {
+                    locEl.className = 'loc-status loc-err';
+                    locEl.innerHTML = `⚠️ Location unavailable — alert will still be sent without it`;
+                }
+
+                window.sendWA = function(target) {
+                    if (target === 1 || target === 'both') {
+                        openWA(p.emergencyPhone, buildMessage(p, p.emergencyName));
+                    }
+                    if ((target === 2 || target === 'both') && has2) {
+                        setTimeout(() => openWA(p.emergencyPhone2, buildMessage(p, p.emergencyName2)), target === 'both' ? 900 : 0);
+                    }
+                };
+
                 const photoHtml = p.photo
                     ? `<div class="patient-photo"><img src="${p.photo}" alt="${p.name}"/></div>`
                     : `<div class="patient-photo">👤</div>`;
 
-                // Second emergency contact
-                const contact2Html = (p.emergencyName2 && p.emergencyPhone2) ? `
+                const contact2Html = has2 ? `
                     <div class="contact-row">
                         <div>
                             <div class="contact-name">${p.emergencyName2}</div>
@@ -170,4 +242,3 @@
     </script>
 </body>
 </html>
-
