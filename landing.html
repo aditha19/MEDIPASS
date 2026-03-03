@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MediPass</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#050a18;color:#e0eeff;font-family:'DM Sans',sans-serif;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px}
+
+.page{width:100%;max-width:420px;text-align:center}
+
+/* Logo */
+.logo{margin-bottom:48px}
+.logo-icon{font-size:48px;margin-bottom:12px;display:block}
+h1{font-family:'Orbitron',monospace;font-size:32px;font-weight:900;color:#fff;letter-spacing:.05em;margin-bottom:6px}
+.sub{font-size:13px;color:rgba(140,180,255,.45);letter-spacing:.15em;text-transform:uppercase}
+
+/* Problem */
+.problem{margin-bottom:48px}
+.problem p{font-size:16px;color:rgba(200,220,255,.65);line-height:1.8;margin-bottom:16px}
+.problem .bold{color:#fff;font-weight:500}
+
+/* Buttons */
+.btns{display:flex;flex-direction:column;gap:12px;margin-bottom:40px}
+
+.btn{display:block;padding:18px 24px;border-radius:14px;text-decoration:none;font-size:15px;font-weight:500;transition:all .2s;text-align:left;display:flex;align-items:center;gap:16px}
+
+.btn-main{background:#0d2137;border:1px solid rgba(0,200,255,.25);color:#fff}
+.btn-main:hover{background:#0f2a47;border-color:rgba(0,200,255,.5);transform:translateY(-2px)}
+
+.btn-second{background:transparent;border:1px solid rgba(255,255,255,.1);color:rgba(200,220,255,.6)}
+.btn-second:hover{border-color:rgba(255,255,255,.25);color:#fff;transform:translateY(-2px)}
+
+.btn-icon{width:44px;height:44px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
+.btn-main .btn-icon{background:rgba(0,200,255,.1)}
+.btn-second .btn-icon{background:rgba(255,255,255,.05)}
+
+.btn-info{flex:1}
+.btn-title{display:block;font-size:15px;font-weight:500;margin-bottom:2px}
+.btn-desc{display:block;font-size:12px;opacity:.5}
+
+.btn-arrow{margin-left:auto;opacity:.4;font-size:18px}
+
+/* Divider */
+.divider{display:flex;align-items:center;gap:12px;margin:4px 0}
+.divider::before,.divider::after{content:'';flex:1;height:1px;background:rgba(255,255,255,.06)}
+.divider span{font-size:11px;color:rgba(255,255,255,.2);letter-spacing:.1em}
+
+/* Footer */
+.footer{font-size:11px;color:rgba(140,180,255,.2);letter-spacing:.08em}
+</style>
+</head>
+<body>
+<div class="page">
+
+  <div class="logo">
+    <span class="logo-icon">⚕️</span>
+    <h1>MEDIPASS</h1>
+    <p class="sub">Smart Medical Passport</p>
+  </div>
+
+  <div class="problem">
+    <p>Your complete medical information,<br>inside a <span class="bold">single QR code.</span></p>
+    <p>When seconds matter, doctors get everything they need — instantly.</p>
+  </div>
+
+  <div class="btns">
+    <a href="index.html" class="btn btn-main">
+      <div class="btn-icon">✦</div>
+      <div class="btn-info">
+        <span class="btn-title">Create My MediPass</span>
+        <span class="btn-desc">First time here? Register in 2 minutes</span>
+      </div>
+      <span class="btn-arrow">→</span>
+    </a>
+
+    <div class="divider"><span>OR</span></div>
+
+    <a href="update.html" class="btn btn-second">
+      <div class="btn-icon">✎</div>
+      <div class="btn-info">
+        <span class="btn-title">Update My Details</span>
+        <span class="btn-desc">Already registered? Edit your info</span>
+      </div>
+      <span class="btn-arrow">→</span>
+    </a>
+  </div>
+
+  <p class="footer">Works on any phone &nbsp;·&nbsp; No app needed &nbsp;·&nbsp; Free forever</p>
+
+</div>
+</body>
+</html>
