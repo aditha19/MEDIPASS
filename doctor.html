@@ -143,23 +143,18 @@
         }
 
         function buildMessage(p, contactName) {
-            const time = new Date().toLocaleTimeString('en-IN');
-            const locLine = locationData
-                ? `\n📍 *Location:* ${locationData.mapsUrl}`
-                : `\n📍 Location: Could not be fetched`;
-            return (
-                `🚨 *EMERGENCY ALERT — MediPass*\n\n` +
-                `Hi ${contactName},\n` +
-                `*${p.name}*'s MediPass QR was just scanned.\n\n` +
-                `🩸 *Blood Group:* ${p.bloodGroup}\n` +
-                `⚠️ *Allergies:* ${p.allergies || 'None'}\n` +
-                `💊 *Medications:* ${p.medications || 'None'}\n` +
-                `🏥 *Conditions:* ${p.diseases || 'None'}\n` +
-                `⏰ *Time:* ${time}` +
-                locLine +
-                `\n\nPlease reach the patient immediately or call *108* for ambulance!`
-            );
-        }
+    const time = new Date().toLocaleTimeString('en-IN');
+    const locLine = locationData
+        ? `\n📍 *Location:* ${locationData.mapsUrl}`
+        : '';
+    return (
+        `🚨 *EMERGENCY ALERT*\n` +
+        `*${p.name}*'s MediPass QR was just scanned by a doctor.\n` +
+        `Please contact them immediately or call *108*.\n` +
+        locLine +
+        `\n🕐 *Time:* ${time}`
+    );
+}
 
         function openWA(phone, msg) {
             window.open(`https://api.whatsapp.com/send?phone=91${phone}&text=${encodeURIComponent(msg)}`, '_blank');
