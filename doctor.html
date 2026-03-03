@@ -65,6 +65,14 @@
         .popup-box p { color: #aaa; margin-bottom: 20px; font-size: 14px; line-height: 1.5; }
         .btn-emergency { display: block; background: #dc3545; color: white; padding: 15px; border-radius: 10px; border: none; font-size: 16px; font-weight: bold; width: 100%; margin-bottom: 10px; cursor: pointer; }
         .btn-normal { display: block; background: #1a73e8; color: white; padding: 15px; border-radius: 10px; border: none; font-size: 16px; font-weight: bold; width: 100%; cursor: pointer; }
+        .donor-card { background: #0a1a0a; border: 2px solid #28a745; padding: 20px; border-radius: 16px; margin-bottom: 14px; }
+        .donor-card h3 { color: #28a745; margin-bottom: 10px; font-size: 14px; text-transform: uppercase; letter-spacing: .1em; }
+        .donor-row { display: flex; align-items: center; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,.06); }
+        .donor-row:last-child { border-bottom: none; }
+        .donor-name { color: #fff; font-weight: bold; font-size: 14px; }
+        .donor-dist { color: #aaa; font-size: 12px; }
+        .donor-btn { background: #28a745; color: white; padding: 8px 12px; border-radius: 8px; text-decoration: none; font-weight: bold; font-size: 12px; }
+        .find-donor-btn { display: block; background: #28a745; color: white; text-align: center; padding: 14px; border-radius: 12px; border: none; font-weight: bold; font-size: 15px; width: 100%; cursor: pointer; margin-bottom: 14px; }
     </style>
 </head>
 <body>
@@ -91,7 +99,7 @@
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getFirestore, doc, getDoc, updateDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { getFirestore, doc, getDoc, updateDoc, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyDQzrcG7R06X-pU9TwZX37Yeb76zVBIM4U",
@@ -114,7 +122,6 @@
         let patientData = null;
         let aiTextGlobal = '';
 
-        // Load patient data immediately
         if (patientId) {
             const docRef = doc(db, "patients", patientId);
             const docSnap = await getDoc(docRef);
@@ -143,21 +150,81 @@
         }
 
         function buildMessage(p, contactName) {
-    const time = new Date().toLocaleTimeString('en-IN');
-    const locLine = locationData
-        ? `\n📍 *Location:* ${locationData.mapsUrl}`
-        : '';
-    return (
-        `🚨 *EMERGENCY ALERT*\n` +
-        `*${p.name}*'s MediPass QR was just scanned by a doctor.\n` +
-        `Please contact them immediately or call *108*.\n` +
-        locLine +
-        `\n🕐 *Time:* ${time}`
-    );
-}
+            const time = new Date().toLocaleTimeString('en-IN');
+            const locLine = locationData ? `\n📍 *Location:* ${locationData.mapsUrl}` : '';
+            return (
+                `🚨 *EMERGENCY ALERT*\n` +
+                `*${p.name}*'s MediPass QR was just scanned by a doctor.\n` +
+                `Please contact them immediately or call *108*.\n` +
+                locLine +
+                `\n🕐 *Time:* ${time}`
+            );
+        }
 
         function openWA(phone, msg) {
             window.open(`https://api.whatsapp.com/send?phone=91${phone}&text=${encodeURIComponent(msg)}`, '_blank');
+        }
+
+        // Calculate distance between two GPS points in km
+        function getDistanceKm(lat1, lng1, lat2, lng2) {
+            const R = 6371;
+            const dLat = (lat2 - lat1) * Math.PI / 180;
+            const dLng = (lng2 - lng1) * Math.PI / 180;
+            const a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+                Math.cos(lat1 * Math.PI/180) * Math.cos(lat2 * Math.PI/180) *
+                Math.sin(dLng/2) * Math.sin(dLng/2);
+            return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+        }
+
+        window.findDonors = async function() {
+            const p = patientData;
+            document.getElementById('donorResults').innerHTML = '<p style="color:#aaa;font-size:13px;">🔍 Searching nearby donors...</p>';
+
+            if (!locationData) {
+                document.getElementById('donorResults').innerHTML = '<p style="color:#ff7a7a;font-size:13px;">⚠️ Location needed to find nearby donors. Please allow location access.</p>';
+                return;
+            }
+
+            try {
+                const snapshot = await getDocs(collection(db, "patients"));
+                const donors = [];
+
+                snapshot.forEach(d => {
+                    const data = d.data();
+                    if (
+                        d.id !== patientId &&
+                        data.isDonor === true &&
+                        data.bloodGroup === p.bloodGroup &&
+                        data.lat && data.lng
+                    ) {
+                        const dist = getDistanceKm(
+                            parseFloat(locationData.lat), parseFloat(locationData.lng),
+                            parseFloat(data.lat), parseFloat(data.lng)
+                        );
+                        if (dist <= 10) {
+                            donors.push({ name: data.name, phone: data.emergencyPhone, dist: dist.toFixed(1) });
+                        }
+                    }
+                });
+
+                donors.sort((a, b) => a.dist - b.dist);
+
+                if (donors.length === 0) {
+                    document.getElementById('donorResults').innerHTML = `<p style="color:#aaa;font-size:13px;">No ${p.bloodGroup} donors found within 10km right now.</p>`;
+                } else {
+                    document.getElementById('donorResults').innerHTML = donors.map(d => `
+                        <div class="donor-row">
+                            <div>
+                                <div class="donor-name">${d.name}</div>
+                                <div class="donor-dist">📍 ${d.dist} km away • ${p.bloodGroup}</div>
+                            </div>
+                            <a href="tel:${d.phone}" class="donor-btn">📞 Call</a>
+                        </div>
+                    `).join('');
+                }
+            } catch(e) {
+                document.getElementById('donorResults').innerHTML = '<p style="color:#ff7a7a;font-size:13px;">Error searching donors.</p>';
+            }
         }
 
         window.setMode = async function(mode) {
@@ -165,14 +232,23 @@
             const p = patientData;
             if (!p) return;
 
+            // Speak immediately when emergency button tapped
+            if (mode === 'emergency') {
+                const immediateText = `Emergency alert. Patient name ${p.name}. Age ${p.age}. Blood group ${p.bloodGroup}. ${p.allergies ? 'Known allergies: ' + p.allergies + '. Do not administer these.' : 'No known allergies.'} Please act immediately.`;
+                const immediateSpeak = new SpeechSynthesisUtterance(immediateText);
+                immediateSpeak.lang = 'en-IN';
+                immediateSpeak.rate = 0.85;
+                immediateSpeak.pitch = 1;
+                window.speechSynthesis.cancel();
+                window.speechSynthesis.speak(immediateSpeak);
+            }
+
             const has2 = !!(p.emergencyName2 && p.emergencyPhone2);
 
-            // Mode badge
             document.getElementById('modeBadge').innerHTML = mode === 'emergency'
                 ? '<div class="mode-badge mode-emergency">🚨 EMERGENCY MODE ACTIVE</div>'
                 : '<div class="mode-badge mode-normal">📋 ROUTINE CHECKUP MODE</div>';
 
-            // Emergency mode — get location and show WhatsApp
             if (mode === 'emergency') {
                 const name1Short = p.emergencyName.split(' ')[0];
                 const name2Short = has2 ? p.emergencyName2.split(' ')[0] : '';
@@ -191,7 +267,6 @@
                     </div>
                 `;
 
-                // Request location — browser will show permission popup automatically
                 locationData = await getLocation();
                 const locEl = document.getElementById('locStatus');
                 if (locationData) {
@@ -212,7 +287,6 @@
                 };
             }
 
-            // Show patient info
             const photoHtml = p.photo
                 ? `<div class="patient-photo"><img src="${p.photo}" alt="${p.name}"/></div>`
                 : `<div class="patient-photo">👤</div>`;
@@ -250,7 +324,7 @@
                     <h3>🤖 AI Emergency Brief</h3>
                     <div id="riskBadge"></div>
                     <p id="aiSummary" class="loading pulse">⏳ Generating clinical summary...</p>
-                    ${mode === 'emergency' ? '<button class="voice-btn" id="voiceBtn" onclick="speakSummary()" disabled>🔊 Read Aloud (Loading...)</button>' : ''}
+                    <button class="voice-btn" id="voiceBtn" onclick="speakSummary()" ${mode === 'emergency' ? 'disabled' : 'style="display:none"'}>🔊 Read Aloud (Loading...)</button>
                 </div>
 
                 <div class="card">
@@ -262,6 +336,13 @@
                     <h3>🏥 Chronic Conditions</h3>
                     <p>${p.diseases || 'None reported'}</p>
                 </div>
+
+                ${mode === 'emergency' ? `
+                <div class="donor-card">
+                    <h3>🩸 Find Nearby Blood Donors (${p.bloodGroup})</h3>
+                    <button class="find-donor-btn" onclick="findDonors()">🔍 Search ${p.bloodGroup} Donors Within 10km</button>
+                    <div id="donorResults"></div>
+                </div>` : ''}
 
                 <div class="emergency-card">
                     <h3>📞 Emergency Contacts</h3>
@@ -325,8 +406,7 @@ Be very direct. Doctor reads this in 10 seconds.`;
                     const voiceBtn = document.getElementById('voiceBtn');
                     if (voiceBtn) {
                         voiceBtn.disabled = false;
-                        voiceBtn.innerText = '🔊 Read Aloud';
-                        speakSummary();
+                        voiceBtn.innerText = '🔊 Read Full AI Summary';
                     }
                 }
 
