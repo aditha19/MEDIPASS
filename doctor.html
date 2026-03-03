@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -5,144 +6,59 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MediPass - Emergency Medical ID</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: Arial, sans-serif;
-        }
-        body {
-            background-color: #fff5f5;
-            padding: 20px;
-        }
-        .header {
-            background-color: #dc3545;
-            color: white;
-            padding: 20px;
-            border-radius: 15px;
-            text-align: center;
-            margin-bottom: 20px;
-        }
-        .header h1 {
-            font-size: 22px;
-            margin-bottom: 5px;
-        }
-        .header p {
-            font-size: 13px;
-            opacity: 0.9;
-        }
-        .card {
-            background: white;
-            padding: 20px;
-            border-radius: 15px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            margin-bottom: 15px;
-        }
-        .blood-group {
-            background: #dc3545;
-            color: white;
-            text-align: center;
-            padding: 20px;
-            border-radius: 15px;
-            margin-bottom: 15px;
-        }
-        .blood-group h2 {
-            font-size: 60px;
-            font-weight: bold;
-        }
-        .blood-group p {
-            font-size: 14px;
-            opacity: 0.9;
-        }
-        .allergy-card {
-            background: #fff3cd;
-            border: 2px solid #ffc107;
-            padding: 20px;
-            border-radius: 15px;
-            margin-bottom: 15px;
-        }
-        .allergy-card h3 {
-            color: #856404;
-            margin-bottom: 8px;
-            font-size: 16px;
-        }
-        .allergy-card p {
-            color: #533f03;
-            font-size: 15px;
-            font-weight: bold;
-        }
-        .card h3 {
-            color: #333;
-            margin-bottom: 8px;
-            font-size: 15px;
-        }
-        .card p {
-            color: #555;
-            font-size: 14px;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: Arial, sans-serif; }
+        body { background-color: #fff5f5; padding: 20px; }
+        .header { background-color: #dc3545; color: white; padding: 20px; border-radius: 15px; text-align: center; margin-bottom: 20px; }
+        .header h1 { font-size: 22px; margin-bottom: 5px; }
+        .header p { font-size: 13px; opacity: 0.9; }
+        .card { background: white; padding: 20px; border-radius: 15px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); margin-bottom: 15px; }
+        .blood-group { background: #dc3545; color: white; text-align: center; padding: 20px; border-radius: 15px; margin-bottom: 15px; }
+        .blood-group h2 { font-size: 60px; font-weight: bold; }
+        .blood-group p { font-size: 14px; opacity: 0.9; }
+        .allergy-card { background: #fff3cd; border: 2px solid #ffc107; padding: 20px; border-radius: 15px; margin-bottom: 15px; }
+        .allergy-card h3 { color: #856404; margin-bottom: 8px; font-size: 16px; }
+        .allergy-card p { color: #533f03; font-size: 15px; font-weight: bold; }
+        .card h3 { color: #333; margin-bottom: 8px; font-size: 15px; }
+        .card p { color: #555; font-size: 14px; }
+
+        /* ── VERIFIED emergency contact card ── */
         .emergency-card {
-            background: #e8f4fd;
-            border: 2px solid #1a73e8;
-            padding: 20px;
-            border-radius: 15px;
-            margin-bottom: 15px;
+            padding: 20px; border-radius: 15px; margin-bottom: 15px;
+            background: #e8f4fd; border: 2px solid #1a73e8;
         }
-        .emergency-card h3 {
-            color: #1a73e8;
-            margin-bottom: 8px;
-            font-size: 16px;
+        .emergency-card.verified {
+            background: #e6f9f0;
+            border: 2px solid #1db954;
         }
-        .emergency-card a {
-            color: #1a73e8;
-            font-size: 18px;
-            font-weight: bold;
-            text-decoration: none;
+        .emergency-card h3 { color: #1a73e8; margin-bottom: 8px; font-size: 16px; }
+        .emergency-card.verified h3 { color: #1db954; }
+
+        .verified-badge {
+            display: inline-flex; align-items: center; gap: 6px;
+            background: #d4f5e2; border: 1px solid #1db954;
+            color: #0f6e30; font-size: 12px; font-weight: bold;
+            padding: 4px 10px; border-radius: 99px; margin-bottom: 10px;
         }
-        .ai-card {
-            background: #f3e8ff;
-            border: 2px solid #7c3aed;
-            padding: 20px;
-            border-radius: 15px;
-            margin-bottom: 15px;
+        .unverified-badge {
+            display: inline-flex; align-items: center; gap: 6px;
+            background: #f0f0f0; border: 1px solid #aaa;
+            color: #555; font-size: 12px; font-weight: bold;
+            padding: 4px 10px; border-radius: 99px; margin-bottom: 10px;
         }
-        .ai-card h3 {
-            color: #7c3aed;
-            margin-bottom: 8px;
-            font-size: 16px;
-        }
-        .ai-card p {
-            color: #4c1d95;
-            font-size: 14px;
-            line-height: 1.6;
-        }
-        .loading {
-            color: #999;
-            font-style: italic;
-        }
-        .patient-name {
-            text-align: center;
-            font-size: 24px;
-            font-weight: bold;
-            color: #333;
-            margin-bottom: 5px;
-        }
-        .patient-age {
-            text-align: center;
-            color: #666;
-            margin-bottom: 15px;
-        }
-        .whatsapp-btn {
-            display: block;
-            background: #25D366;
-            color: white;
-            text-align: center;
-            padding: 15px;
-            border-radius: 10px;
-            text-decoration: none;
-            font-weight: bold;
-            font-size: 16px;
-            margin-bottom: 15px;
-        }
+
+        .emergency-card a { color: #1a73e8; font-size: 18px; font-weight: bold; text-decoration: none; }
+        .emergency-card.verified a { color: #1db954; }
+
+        .ai-card { background: #f3e8ff; border: 2px solid #7c3aed; padding: 20px; border-radius: 15px; margin-bottom: 15px; }
+        .ai-card h3 { color: #7c3aed; margin-bottom: 8px; font-size: 16px; }
+        .ai-card p { color: #4c1d95; font-size: 14px; line-height: 1.6; }
+        .loading { color: #999; font-style: italic; }
+        .patient-name { text-align: center; font-size: 24px; font-weight: bold; color: #333; margin-bottom: 5px; }
+        .patient-age { text-align: center; color: #666; margin-bottom: 15px; }
+        .whatsapp-btn { display: block; background: #25D366; color: white; text-align: center; padding: 15px; border-radius: 10px; text-decoration: none; font-weight: bold; font-size: 16px; margin-bottom: 10px; }
+        .call-btn { display: block; background: #dc3545; color: white; text-align: center; padding: 15px; border-radius: 10px; text-decoration: none; font-weight: bold; font-size: 16px; margin-bottom: 15px; letter-spacing: 0.02em; }
+        .call-btn:hover { background: #b02a37; }
+        .action-label { font-size: 11px; text-align: center; color: #999; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.1em; }
     </style>
 </head>
 <body>
@@ -152,8 +68,9 @@
         <p>MediPass — Verified Medical Passport</p>
     </div>
 
-    <div id="whatsappContainer"></div>
-
+    <div id="whatsappContainer">
+        <p style="text-align:center; color:#999; margin-bottom:15px;">📍 Getting location & loading alert...</p>
+    </div>
     <div id="patientInfo">
         <p style="text-align:center; color:#999;">Loading patient data...</p>
     </div>
@@ -172,28 +89,70 @@
         };
 
         const app = initializeApp(firebaseConfig);
-        const db = getFirestore(app);
+        const db  = getFirestore(app);
+
+        // ── Step 1: Get GPS as a Promise first ──
+        function getLocation() {
+            return new Promise((resolve) => {
+                if (!navigator.geolocation) {
+                    resolve('Location not supported on this device');
+                    return;
+                }
+                navigator.geolocation.getCurrentPosition(
+                    (pos) => {
+                        const lat = pos.coords.latitude.toFixed(6);
+                        const lng = pos.coords.longitude.toFixed(6);
+                        resolve(`https://maps.google.com/?q=${lat},${lng}`);
+                    },
+                    () => resolve('Location unavailable (permission denied)'),
+                    { timeout: 8000, enableHighAccuracy: true }
+                );
+            });
+        }
 
         const urlParams = new URLSearchParams(window.location.search);
         const patientId = urlParams.get('id');
 
         if (patientId) {
-            const docRef = doc(db, "patients", patientId);
-            const docSnap = await getDoc(docRef);
+            const docRef  = doc(db, 'patients', patientId);
+
+            // ── Step 2: Fetch patient + GPS in parallel ──
+            const [docSnap, locationText] = await Promise.all([
+                getDoc(docRef),
+                getLocation()
+            ]);
 
             if (docSnap.exists()) {
                 const p = docSnap.data();
 
-                // Show WhatsApp button first
-                const message = `🚨 EMERGENCY ALERT: ${p.name}'s MediPass was scanned by a doctor. Please contact them immediately or call 108. Time: ${new Date().toLocaleTimeString()}`;
+                // ── Step 3: Build WhatsApp message WITH location already resolved ──
+                const message =
+                    `🚨 EMERGENCY ALERT\n\n` +
+                    `*${p.name}*'s MediPass QR was just scanned by a doctor.\n\n` +
+                    `Please contact them immediately or call *108*.\n\n` +
+                    `📍 *Location:* ${locationText}\n` +
+                    `🕐 *Time:* ${new Date().toLocaleTimeString()}`;
+
                 const whatsappUrl = `https://api.whatsapp.com/send?phone=91${p.emergencyPhone}&text=${encodeURIComponent(message)}`;
+
                 document.getElementById('whatsappContainer').innerHTML = `
+                    <p class="action-label">Emergency Actions</p>
                     <a href="${whatsappUrl}" target="_blank" class="whatsapp-btn">
                         📱 Send Emergency WhatsApp Alert to Family
                     </a>
+                    <a href="tel:${p.emergencyPhone}" class="call-btn">
+                        📞 Call ${p.emergencyName} — ${p.emergencyPhone}
+                    </a>
                 `;
 
-                // Show patient info
+                // ── Build verification badge ──
+                const isVerified = p.guardianVerified === true;
+                const badgeHtml = isVerified
+                    ? `<span class="verified-badge">✅ Verified Guardian</span>`
+                    : `<span class="unverified-badge">⬜ Unverified (still receives alerts)</span>`;
+                const cardClass = isVerified ? 'emergency-card verified' : 'emergency-card';
+
+                // ── Render patient info ──
                 document.getElementById('patientInfo').innerHTML = `
                     <p class="patient-name">${p.name}</p>
                     <p class="patient-age">Age: ${p.age}</p>
@@ -223,8 +182,9 @@
                         <p id="aiSummary" class="loading">Generating AI summary...</p>
                     </div>
 
-                    <div class="emergency-card">
+                    <div class="${cardClass}">
                         <h3>📞 Emergency Contact</h3>
+                        ${badgeHtml}
                         <p style="font-weight:bold; margin-bottom:5px;">${p.emergencyName}</p>
                         <a href="tel:${p.emergencyPhone}">📱 ${p.emergencyPhone}</a>
                     </div>
