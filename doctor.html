@@ -102,7 +102,7 @@
         import { getFirestore, doc, getDoc, updateDoc, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
         const firebaseConfig = {
-            apiKey: "AIzaSyAjuztgKHSRCe1FY2eTwAH9amH6E1jkCfY",
+            apiKey: "AIzaSyCj0qJHJKKolxYSAvka2-Pxhxgd0iFUTmE",
             authDomain: "medipass-e4f7d.firebaseapp.com",
             projectId: "medipass-e4f7d",
             storageBucket: "medipass-e4f7d.firebasestorage.app",
@@ -110,7 +110,7 @@
             appId: "1:911340948509:web:e8d0ca16801a34fddb4af4"
         };
 
-        const GEMINI_API_KEY = "AIzaSyAjuztgKHSRCe1FY2eTwAH9amH6E1jkCfY";
+        const GEMINI_API_KEY = "PASTE_YOUR_GEMINI_KEY_HERE";
 
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
@@ -165,7 +165,6 @@
             window.open(`https://api.whatsapp.com/send?phone=91${phone}&text=${encodeURIComponent(msg)}`, '_blank');
         }
 
-        // Calculate distance between two GPS points in km
         function getDistanceKm(lat1, lng1, lat2, lng2) {
             const R = 6371;
             const dLat = (lat2 - lat1) * Math.PI / 180;
@@ -179,38 +178,23 @@
         window.findDonors = async function() {
             const p = patientData;
             document.getElementById('donorResults').innerHTML = '<p style="color:#aaa;font-size:13px;">🔍 Searching nearby donors...</p>';
-
             if (!locationData) {
-                document.getElementById('donorResults').innerHTML = '<p style="color:#ff7a7a;font-size:13px;">⚠️ Location needed to find nearby donors. Please allow location access.</p>';
+                document.getElementById('donorResults').innerHTML = '<p style="color:#ff7a7a;font-size:13px;">⚠️ Location needed to find nearby donors.</p>';
                 return;
             }
-
             try {
                 const snapshot = await getDocs(collection(db, "patients"));
                 const donors = [];
-
                 snapshot.forEach(d => {
                     const data = d.data();
-                    if (
-                        d.id !== patientId &&
-                        data.isDonor === true &&
-                        data.bloodGroup === p.bloodGroup &&
-                        data.lat && data.lng
-                    ) {
-                        const dist = getDistanceKm(
-                            parseFloat(locationData.lat), parseFloat(locationData.lng),
-                            parseFloat(data.lat), parseFloat(data.lng)
-                        );
-                        if (dist <= 10) {
-                            donors.push({ name: data.name, phone: data.emergencyPhone, dist: dist.toFixed(1) });
-                        }
+                    if (d.id !== patientId && data.isDonor === true && data.bloodGroup === p.bloodGroup && data.lat && data.lng) {
+                        const dist = getDistanceKm(parseFloat(locationData.lat), parseFloat(locationData.lng), parseFloat(data.lat), parseFloat(data.lng));
+                        if (dist <= 10) donors.push({ name: data.name, phone: data.emergencyPhone, dist: dist.toFixed(1) });
                     }
                 });
-
                 donors.sort((a, b) => a.dist - b.dist);
-
                 if (donors.length === 0) {
-                    document.getElementById('donorResults').innerHTML = `<p style="color:#aaa;font-size:13px;">No ${p.bloodGroup} donors found within 10km right now.</p>`;
+                    document.getElementById('donorResults').innerHTML = `<p style="color:#aaa;font-size:13px;">No ${p.bloodGroup} donors found within 10km.</p>`;
                 } else {
                     document.getElementById('donorResults').innerHTML = donors.map(d => `
                         <div class="donor-row">
@@ -232,7 +216,7 @@
             const p = patientData;
             if (!p) return;
 
-            // Speak immediately when emergency button tapped
+            // Speak immediately on emergency button tap
             if (mode === 'emergency') {
                 const immediateText = `Emergency alert. Patient name ${p.name}. Age ${p.age}. Blood group ${p.bloodGroup}. ${p.allergies ? 'Known allergies: ' + p.allergies + '. Do not administer these.' : 'No known allergies.'} Please act immediately.`;
                 const immediateSpeak = new SpeechSynthesisUtterance(immediateText);
@@ -252,7 +236,6 @@
             if (mode === 'emergency') {
                 const name1Short = p.emergencyName.split(' ')[0];
                 const name2Short = has2 ? p.emergencyName2.split(' ')[0] : '';
-
                 document.getElementById('whatsappContainer').innerHTML = `
                     <div class="whatsapp-section">
                         <div id="locStatus" class="loc-status loc-fetching">⏳ Requesting location access...</div>
@@ -266,7 +249,6 @@
                         </div>` : ''}
                     </div>
                 `;
-
                 locationData = await getLocation();
                 const locEl = document.getElementById('locStatus');
                 if (locationData) {
@@ -276,14 +258,9 @@
                     locEl.className = 'loc-status loc-err';
                     locEl.innerHTML = `⚠️ Location denied — alert will be sent without location`;
                 }
-
                 window.sendWA = function(target) {
-                    if (target === 1 || target === 'both') {
-                        openWA(p.emergencyPhone, buildMessage(p, p.emergencyName));
-                    }
-                    if ((target === 2 || target === 'both') && has2) {
-                        setTimeout(() => openWA(p.emergencyPhone2, buildMessage(p, p.emergencyName2)), 900);
-                    }
+                    if (target === 1 || target === 'both') openWA(p.emergencyPhone, buildMessage(p, p.emergencyName));
+                    if ((target === 2 || target === 'both') && has2) setTimeout(() => openWA(p.emergencyPhone2, buildMessage(p, p.emergencyName2)), 900);
                 };
             }
 
@@ -309,41 +286,34 @@
                         <div class="verify-badge">✓ Verify face matches photo</div>
                     </div>
                 </div>
-
                 <div class="blood-group">
                     <h2>${p.bloodGroup}</h2>
                     <p>Blood Group</p>
                 </div>
-
                 <div class="allergy-card">
                     <h3>⚠️ ALLERGIES — DO NOT ADMINISTER</h3>
                     <p>${p.allergies || 'None reported'}</p>
                 </div>
-
                 <div class="ai-card">
                     <h3>🤖 AI Emergency Brief</h3>
                     <div id="riskBadge"></div>
                     <p id="aiSummary" class="loading pulse">⏳ Generating clinical summary...</p>
-                    <button class="voice-btn" id="voiceBtn" onclick="speakSummary()" ${mode === 'emergency' ? 'disabled' : 'style="display:none"'}>🔊 Read Aloud (Loading...)</button>
+                    ${mode === 'emergency' ? '<button class="voice-btn" id="voiceBtn" onclick="speakSummary()" disabled>🔊 Read Aloud (Loading...)</button>' : ''}
                 </div>
-
                 <div class="card">
                     <h3>💊 Current Medications</h3>
                     <p>${p.medications || 'None reported'}</p>
                 </div>
-
                 <div class="card">
                     <h3>🏥 Chronic Conditions</h3>
                     <p>${p.diseases || 'None reported'}</p>
                 </div>
-
                 ${mode === 'emergency' ? `
                 <div class="donor-card">
                     <h3>🩸 Find Nearby Blood Donors (${p.bloodGroup})</h3>
                     <button class="find-donor-btn" onclick="findDonors()">🔍 Search ${p.bloodGroup} Donors Within 10km</button>
                     <div id="donorResults"></div>
                 </div>` : ''}
-
                 <div class="emergency-card">
                     <h3>📞 Emergency Contacts</h3>
                     <div class="contact-row">
